@@ -1,5 +1,5 @@
 class Product < ActiveRecord::Base
-  attr_accessible :name, :description, :user_ids
+  attr_accessible :name, :description, :user_ids, :ticket_product_id
   
 	has_many :test_plans
 	has_many :versions, :dependent => :destroy

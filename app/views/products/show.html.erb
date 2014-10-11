@@ -13,6 +13,10 @@
           <td class="title">Description</td>
           <td><%= @product.description %></td>
         </tr>
+        <tr>
+        	<td class="title">Ticketing Product</td>
+        	<td><%= ticket_product_name(@product.ticket_product_id) %></td>
+        </tr>
       </tbody>
     </table>
   </div>

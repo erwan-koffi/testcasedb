@@ -176,7 +176,87 @@ class Ticket
       end
     end
 
-    return bug_status    
+    return bug_status
+  end
+
+  def self.products
+    ticket_products = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Build the URI
+      # It is assumed that the URL fully includes the API path
+      uri = URI(settings["url"] + '/projects.xml')
+      # Build the requests
+      req = Net::HTTP::Get.new(uri.request_uri)
+      # Add authentication info
+      req.basic_auth settings['username'], settings['password']
+      # Enable ssl if uri starts with https
+      if uri.scheme == "https"
+        req.use_ssl = true
+        # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      # Run the request
+      result = Net::HTTP.start(uri.host, uri.port) {|http|
+        http.request(req)
+      }
+
+      # Was there a 2xx pass result
+      if Net::HTTPSuccess === result
+        # Result is in xml... break it down
+        xmlResult = REXML::Document.new(result.body)
+        
+        # and add the status to the hash
+        # We need the value of name for the status element
+        ticketProduct = {}
+        xmlResult.elements.each("//id") do
+          |element| ticketProduct[:id] = element.text
+        end
+        xmlResult.elements.each("//name") do
+          |element| ticketProduct[:name] = element.text
+        end
+        ticket_products.push(ticketProduct)
+      end
+    end
+    return ticket_products
+  end
+
+  def self.products_info(ids)
+    ticket_product = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Mantis, need to query each bug one by one and add to hash
+      ids.each do |id|
+        # Build the URI
+        # It is assumed that the URL fully includes the API path
+        uri = URI(settings["url"] + 'projects/' + id + '.xml')
+        # Build the requests
+        req = Net::HTTP::Get.new(uri.request_uri)
+        # Add authentication info
+        req.basic_auth settings['username'], settings['password']
+        # Enable ssl if uri starts with https
+        if uri.scheme == "https"
+          req.use_ssl = true
+          # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+        # Run the request
+        result = Net::HTTP.start(uri.host, uri.port) {|http|
+          http.request(req)
+        }
+  
+        # Was there a 2xx pass result
+        if Net::HTTPSuccess === result
+          # Result is in xml... break it down
+          xmlResult = REXML::Document.new(result.body)
+          
+          # and add the status to the hash
+          # We need the value of name for the status element
+          ticket_product[id.to_i] = { :name => xmlResult.elements["//name"].text, :description => xmlResult.elements["//description"].text }
+        else
+          ticket_product["error"] = true
+        end
+      end
+    end
+    return ticket_product
   end
 
   private 

@@ -5,6 +5,7 @@
   
 		<%= f.input :name %>
 		<%= f.input :description, :input_html => { :rows => 5, :class => "input-xxlarge"} %>
+		<%= f.input :ticket_product_id, as: :select, collection: list_of_ticket_product %>
 
     <div class="control-group">
       <%= f.label :name, "Select authorized users" %>
