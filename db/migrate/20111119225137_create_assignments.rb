@@ -5,7 +5,6 @@ class CreateAssignments < ActiveRecord::Migration
       t.integer :product_id
       t.integer :version_id
       t.integer :test_plan_id
-      t.text :bugs
 
       t.timestamps
     end

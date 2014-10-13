@@ -4,7 +4,6 @@ class CreateVersions < ActiveRecord::Migration
       t.string :version
       t.text :description
       t.integer :product_id
-      t.integer :ticket_version_id
 
       t.timestamps
     end
