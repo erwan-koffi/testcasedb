@@ -3,7 +3,8 @@ class CreateProducts < ActiveRecord::Migration
     create_table :products do |t|
       t.string :name
       t.text :description
-      t.integer :ticket_product_id
+      t.integer :ticket_project_id
+
       t.timestamps
     end
   end
