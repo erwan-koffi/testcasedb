@@ -220,7 +220,7 @@ class Ticket
   end
 
   def self.projects_info(ids)
-    ticket_project = []
+    ticket_project = {}
     settings = ticket_settings()
     if settings["system"] == 'Redmine'
       # Mantis, need to query each bug one by one and add to hash
@@ -249,7 +249,7 @@ class Ticket
           
           # and add the status to the hash
           # We need the value of name for the status element
-          ticket_project[id.to_i] = { :name => xml_result.elements["//name"].text, :description => xml_result.elements["//description"].text }
+          ticket_project[id] = { :name => xml_result.elements["//name"].text, :description => xml_result.elements["//description"].text }
         else
           ticket_project["error"] = true
         end
@@ -301,14 +301,14 @@ class Ticket
   end
 
   def self.versions_info(ids)
-    ticket_version = []
+    ticket_version = {}
     settings = ticket_settings()
     if settings["system"] == 'Redmine'
       # Mantis, need to query each bug one by one and add to hash
       ids.each do |id|
         # Build the URI
         # It is assumed that the URL fully includes the API path
-        uri = URI(settings["url"] + 'versions/' + id + '.xml')
+        uri = URI(settings["url"] + 'versions/' + id.to_s + '.xml')
         # Build the requests
         req = Net::HTTP::Get.new(uri.request_uri)
         # Add authentication info
@@ -330,7 +330,7 @@ class Ticket
           
           # and add the status to the hash
           # We need the value of name for the status element
-          ticket_version[id.to_i] = {
+          ticket_version[id] = {
             :name => xml_result.elements["//name"].text,
             :description => xml_result.elements["//description"].text,
             :status => xml_result.elements["//status"].text }

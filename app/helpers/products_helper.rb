@@ -16,6 +16,8 @@ module ProductsHelper
       ticket_product = Ticket.projects_info(ids)
       ticket_product[id]
     else
+      ticket_product = {}
+      ticket_product[id] = {}
       ticket_product[id][:name] = ""
       ticket_product[id][:description] = ""
       ticket_product[id]

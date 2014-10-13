@@ -6,7 +6,7 @@
         <%= f.association :product, collection: product_list %>
         <%= f.input :version %>
       	<%= f.input :description, :input_html => { :rows => 5, :class => "input-xxlarge"}   %>
-      	<%= f.input :ticket_version_id, as: :select, collection: list_of_ticket_versions %>
+        <%= f.input :ticket_version_id, as: :select, collection: list_ticket_versions %>
 
       	<div class="actions">
           <% unless @version.id %>	
