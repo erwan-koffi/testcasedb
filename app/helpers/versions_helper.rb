@@ -7,7 +7,7 @@ module VersionsHelper
       |product|
       versions << { :id => product[2], :versions => Ticket.project_version(product[1].to_s) }
     end
-    versions[0][:versions].collect { |v| [v[:name], v[:id]] }.sort
+    versions[0][:versions].collect { |v| [v[:name], v[:id]] }.sort.reverse
   end
 
   def ticket_version_name(id)
@@ -16,14 +16,13 @@ module VersionsHelper
     if(id.present?)
       ids.push(id)
       ticket_version = Ticket.versions_info(ids)
-      ticket_version[id]
     end
     if(ticket_version.blank?)
       ticket_version[id] = {}
       ticket_version[id][:name] = ""
       ticket_version[id][:description] = ""
-      ticket_version[id]
     end
+      ticket_version[id]
   end
 
 end

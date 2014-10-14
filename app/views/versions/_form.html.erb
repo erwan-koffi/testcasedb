@@ -21,4 +21,17 @@
     <% end %>
   </div>
 </div>
+<div id="test_div"><%= jquery_version_ticket_version_update_url %></div>
+<script>
+  // when the #test result product field changes get a list of ticketing versions
+  $("#version_product_id").change(function() {
+    // make a POST call and replace the content
+    var product = $('select#version_product_id :selected').val();
+    if(product == "") product="0";
+    jQuery.get('<%= jquery_version_ticket_version_update_url %>/' + product, function(data) { 
+      $("#version_ticket_version_id").empty().append(data);
+    })
+    return false;
+  });
+</script>
 

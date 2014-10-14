@@ -169,7 +169,10 @@ class Ticket
           
           # and add the status to the hash
           # We need the value of name for the status element
-          bug_status[id] = { :status => xmlResult.elements["//status"].attributes["name"], :name => xmlResult.elements["//subject"].text }
+          bug_status[id] = { :id => xmlResult.elements["//id"].text,
+                             :status => xmlResult.elements["//status"].attributes["name"],
+                             :name => xmlResult.elements["//subject"].text,
+                             :description => xmlResult.elements["//description"].text }
         else
           bug_status["error"] = true
         end
@@ -177,6 +180,50 @@ class Ticket
     end
 
     return bug_status
+  end
+
+  def self.project_issues(project_id)
+    issues = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Build the URI
+      # It is assumed that the URL fully includes the API path
+      uri = URI(settings["url"] + 'issues.xml?limit=200&project_id=' + project_id.to_s)
+      # Build the requests
+      req = Net::HTTP::Get.new(uri.request_uri)
+      # Add authentication info
+      req.basic_auth settings['username'], settings['password']
+      # Enable ssl if uri starts with https
+      if uri.scheme == "https"
+        req.use_ssl = true
+        # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      # Run the request
+      result = Net::HTTP.start(uri.host, uri.port) {|http|
+        http.request(req)
+      }
+
+      # Was there a 2xx pass result
+      if Net::HTTPSuccess === result
+        # Result is in xml... break it down
+        xml_result = REXML::Document.new(result.body)
+
+        # and add the status to the hash
+        # We need the value of name for the status element
+        xml_result.elements.each("//issue") do
+          |element|
+          issue = {}
+          issue[:id] = element.elements["id"].text
+          issue[:status] = element.elements["status"].attributes["name"]
+          issue[:name] = element.elements["subject"].text
+          issue[:description] = element.elements["description"].text
+          issues.push(issue)
+        end
+      else
+        issues["error"] = true
+      end
+    end
+    return issues
   end
 
   def self.projects

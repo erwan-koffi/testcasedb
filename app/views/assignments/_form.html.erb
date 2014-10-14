@@ -15,8 +15,7 @@
       <% else %>
         <%= f.association :version, collection: version_list(@assignment.product_id) %>
       <% end %>
-  	</div>
-
+    </div>
 
     <% # We render the test plan select here so we can select pre-selected values %>
     <% # Test Plan field updates use the partial %>
@@ -26,7 +25,7 @@
       <% else %>
         <%= f.association :test_plan, collection: test_plans_list(@assignment), promt: ' ' %>
       <% end %>
-  	</div>
+    </div>
 
     <% # We render the test plan stencik select here so we can select pre-selected values %>
     <% # Test Plan stencil field updates use the partial %>
@@ -39,6 +38,12 @@
     </div>
 
     <%= f.input :notes, :input_html => { :rows => 5, :class => "input-xxlarge"}%>    
+    <div class="control-group select optional <%= :issues %>">
+      <%= f.label :issues, "Select issues", { :class => 'select optional control-label' } %>
+      <div class="controls">
+        <%= f.select :issues, ticket_issues(18), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+      </div>
+    </div>
     <legend>Task Components</legend>
 
     <%= f.simple_fields_for :task do |task| %>

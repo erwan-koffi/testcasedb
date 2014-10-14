@@ -86,7 +86,6 @@ class AssignmentsController < ApplicationController
       # Verify user can view items for this product. Must be in his product
       authorize_product!(@assignment.product)
     end
-    
     #!# @versions = Version.find(:all)
     #!# @plans_select = TestPlan.find(:all).collect {|p| [ p.name + " | Version " + p.version.to_s, p.id ]}
     
@@ -142,7 +141,11 @@ class AssignmentsController < ApplicationController
       # and status to assigned
       @assignment.task.task = 4
       @assignment.task.status = 0
-
+      if(@assignment.issues.any?)
+        @assignment.issues = @assignment.issues.reject(&:blank?).join(',')
+      else
+        @assignment.issues = ""
+      end
       saveResult = @assignment.save
 
       # Only add the results if save was successful. Missed this earlier and was getting blank result items

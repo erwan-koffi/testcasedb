@@ -5,7 +5,7 @@ development:
   database: tcdb_development
   encoding: utf8
   username: root
-  password: 
+  password: "123456"
   pool: 5
   timeout: 5000
 
@@ -17,7 +17,7 @@ test:
   database: tcdb_test
   encoding: utf8
   username: root
-  password: 
+  password: "123456"
   pool: 5
   timeout: 5000
 
@@ -26,6 +26,6 @@ production:
   database: tcdb_production
   encoding: utf8
   username: root
-  password: 
+  password: "123456"
   pool: 5
   timeout: 5000

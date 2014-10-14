@@ -122,6 +122,8 @@ TestDB::Application.routes.draw do
   get 'uploads/:id' => 'uploads#show', :as => 'upload'
 
   resources :versions
+  match 'versions/update_ticket_version_select/:id', :controller=>'versions', :action => 'update_ticket_version_select'
+  match 'versions/update_ticket_version_select/', :controller=>'versions', :action => 'update_ticket_version_select', :as => 'jquery_version_ticket_version_update'
 
 	get '/test_plans/search/', :controller => 'test_plans', :action => 'search', :as => 'test_plan_search'
   resources :test_plans do
