@@ -1,13 +1,17 @@
 module VersionsHelper
 
-  def list_ticket_versions()
-    versions = Array.new
+  def list_ticket_versions(product_id)
+    versions = []
     products = product_list
     products.each do
       |product|
       versions << { :id => product[2], :versions => Ticket.project_version(product[1].to_s) }
     end
-    versions[0][:versions].collect { |v| [v[:name], v[:id]] }.sort.reverse
+    if versions[product_id].present?
+      versions[product_id][:versions].collect { |v| [v[:name], v[:id]] }.sort.reverse
+    else
+      []
+    end
   end
 
   def ticket_version_name(id)

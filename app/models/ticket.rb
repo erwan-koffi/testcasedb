@@ -182,13 +182,17 @@ class Ticket
     return bug_status
   end
 
-  def self.project_issues(project_id)
+  def self.project_issues(project_id, version_id = 0)
     issues = []
     settings = ticket_settings()
     if settings["system"] == 'Redmine'
       # Build the URI
       # It is assumed that the URL fully includes the API path
-      uri = URI(settings["url"] + 'issues.xml?limit=200&project_id=' + project_id.to_s)
+      parameters = 'project_id=' + project_id.to_s + '&limit=200&status_id=*'
+      if version_id != 0
+        parameters = parameters + '&fixed_version_id=' + version_id.to_s
+      end
+      uri = URI(settings["url"] + 'issues.xml?' + parameters)
       # Build the requests
       req = Net::HTTP::Get.new(uri.request_uri)
       # Add authentication info
@@ -217,6 +221,7 @@ class Ticket
           issue[:status] = element.elements["status"].attributes["name"]
           issue[:name] = element.elements["subject"].text
           issue[:description] = element.elements["description"].text
+          issue[:version] = element.elements["fixed_version"].attributes["name"]
           issues.push(issue)
         end
       else

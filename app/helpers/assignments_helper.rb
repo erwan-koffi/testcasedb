@@ -27,13 +27,19 @@ module AssignmentsHelper
     end
   end
   
-  def ticket_issues(project_id)
-    if(project_id.present?)
-      issues = Ticket.project_issues(project_id)
-      issues.sort_by { |issue| issue[:id].to_i }.reverse.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
-    else
-      issues = {}
+  def ticket_issues(product_id, product_version = 0)
+    issues = {}
+    if(product_id.present?)
+      product = Product.find(product_id)
+      if product_version != 0
+        version = Version.find(product_version)
+        issues = Ticket.project_issues(product.ticket_project_id, version.ticket_version_id)
+      else
+        issues = Ticket.project_issues(product.ticket_project_id)
+      end
+      issues = issues.sort_by { |issue| issue[:id].to_i }.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
     end
+    return issues
   end
 
   def issues_list(assignment)

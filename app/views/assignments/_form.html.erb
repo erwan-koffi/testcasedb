@@ -41,7 +41,13 @@
     <div class="control-group select optional <%= :issues %>">
       <%= f.label :issues, "Select issues", { :class => 'select optional control-label' } %>
       <div class="controls">
-        <%= f.select :issues, ticket_issues(18), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+        <% if @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.blank? %>
+          <%= f.select :issues, ticket_issues(@assignment.product_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+        <% elsif @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.present? %>
+          <%= f.select :issues, ticket_issues(@assignment.product_id, @assignment.version_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+        <% else %>
+          <%= f.select :issues, ticket_issues(""), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+        <% end %>
       </div>
     </div>
     <legend>Task Components</legend>
@@ -69,6 +75,7 @@ $("#assignment_product_id").change(function() {
   // make a POST call and replace the content
   var product = $('select#assignment_product_id :selected').val();
   if(product == "") product="0";
+  $("#assignment_issues").empty()
   jQuery.get('<%= jquery_assignment_version_update_url %>/' + product, function(data) { 
     $("#assignment_version_id").empty().append(data);
   })
@@ -80,5 +87,16 @@ $("#assignment_product_id").change(function() {
   })
   
   return false;
+});
+
+$("#assignment_version_id").change(function(){
+  var product = $('select#assignment_product_id :selected').val();
+  var version = $('select#assignment_version_id :selected').val();
+  if(product == "") product="0";
+  if(version == "") version="0";
+  jQuery.get('<%= jquery_assignment_ticket_issue_update_url %>/' + product + '/' + version, function(data) { 
+    $("#assignment_issues").empty().append(data);
+  })
+  
 });
 </script>
