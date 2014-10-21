@@ -6,10 +6,12 @@
         <%= f.association :product, collection: product_list %>
         <%= f.input :version %>
       	<%= f.input :description, :input_html => { :rows => 5, :class => "input-xxlarge"}   %>
+        <% if (Setting.value('Ticket System').present?) %>
         <% if @version.product.present? %>
-          <%= f.input :ticket_version_id, as: :select, collection: list_ticket_versions(@version.product.id) %>
-        <% else %>
-          <%= f.input :ticket_version_id, as: :select, collection: list_ticket_versions(-1), disabled: true %>
+            <%= f.input :ticket_version_id, as: :select, collection: list_ticket_versions(@version.product.id) %>
+          <% else %>
+            <%= f.input :ticket_version_id, as: :select, collection: list_ticket_versions(-1)%>
+          <% end %>
         <% end %>
       	<div class="actions">
           <% unless @version.id %>	

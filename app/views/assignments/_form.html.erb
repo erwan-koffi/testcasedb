@@ -37,19 +37,22 @@
   	  <% end %>
     </div>
 
-    <%= f.input :notes, :input_html => { :rows => 5, :class => "input-xxlarge"}%>    
-    <div class="control-group select optional <%= :issues %>">
-      <%= f.label :issues, "Select issues", { :class => 'select optional control-label' } %>
-      <div class="controls">
-        <% if @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.blank? %>
-          <%= f.select :issues, ticket_issues(@assignment.product_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
-        <% elsif @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.present? %>
-          <%= f.select :issues, ticket_issues(@assignment.product_id, @assignment.version_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
-        <% else %>
-          <%= f.select :issues, ticket_issues(""), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
-        <% end %>
+    <%= f.input :notes, :input_html => { :rows => 5, :class => "input-xxlarge"}%>
+
+    <% if (Setting.value('Ticket System').present?) %>
+      <div class="control-group select optional <%= :issues %>">
+        <%= f.label :issues, "Select issues", { :class => 'select optional control-label' } %>
+        <div class="controls">
+          <% if @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.blank? %>
+            <%= f.select :issues, ticket_issues(@assignment.product_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+          <% elsif @assignment.id.present? and @assignment.product_id.present? and @assignment.version_id.present? %>
+            <%= f.select :issues, ticket_issues(@assignment.product_id, @assignment.version_id), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+          <% else %>
+            <%= f.select :issues, ticket_issues(""), {}, {:multiple => true, :class => 'select optional select-xxlarge'} %>
+          <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
     <legend>Task Components</legend>
 
     <%= f.simple_fields_for :task do |task| %>

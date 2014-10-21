@@ -5,7 +5,9 @@
   
 		<%= f.input :name %>
 		<%= f.input :description, :input_html => { :rows => 5, :class => "input-xxlarge"} %>
-		<%= f.input :ticket_project_id, as: :select, collection: list_of_ticket_projects %>
+                <% if (Setting.value('Ticket System').present?) %>
+                  <%= f.input :ticket_project_id, as: :select, collection: list_of_ticket_projects %>
+                <% end %>
 
     <div class="control-group">
       <%= f.label :name, "Select authorized users" %>
