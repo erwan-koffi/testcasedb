@@ -1,5 +1,5 @@
 module ReportsHelper
-  REPORT_TYPES = ["System Status", "Release Current State", "Release Current State - By User", "Release Progress - Daily", "Compare Release Results", "Test Cases without Steps", "Open Tasks", "Release Bug Report", "Compare Release Results - Detailed" ]
+  REPORT_TYPES = ["System Status", "Release Current State", "Release Current State - By User", "Release Progress - Daily", "Compare Release Results", "Test Cases without Steps", "Open Tasks", "Release Bug Report", "Compare Release Results - Detailed", "Release Results - Detailed" ]
   
   # returns a s list of users for a select item
   # def user_list()
@@ -63,7 +63,7 @@ module ReportsHelper
     cumulative_total = 0
     output = []
     (start_time..end_time).map do |date|
-      result = results_by_day.detect { |result| result[0].to_date == date }      
+      result = results_by_day.detect { |res| res[0].to_date == date }
       if result then cumulative_total += result[1].to_i end
       output.push [date.to_time.to_i * 1000, cumulative_total]
     end
@@ -171,9 +171,12 @@ module ReportsHelper
     return bug_results
   end
   
-  def test_cases_in_versions(version1, version2)
+  def test_cases_in_versions(version1, version2 = nil)
     results1 = Result.where(:assignment_id => Assignment.where(:version_id => version1)).joins(:assignment).joins(:test_plan)
-    results2 = Result.where(:assignment_id => Assignment.where(:version_id => version2)).joins(:assignment).joins(:test_plan)
+    results2 =[]
+    unless version2.nil? then
+      results2 = Result.where(:assignment_id => Assignment.where(:version_id => version2)).joins(:assignment).joins(:test_plan)
+    end
 
     results = []
 
