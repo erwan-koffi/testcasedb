@@ -33,7 +33,7 @@ module AssignmentsHelper
       product = Product.find(product_id)
       if product_version != 0
         version = Version.find(product_version)
-        issues = Ticket.project_issues(product.ticket_project_id, version.ticket_version_id)
+        issues = Ticket.project_issues(product.ticket_project_id.to_i, version.ticket_version_id.to_i)
       else
         issues = Ticket.project_issues(product.ticket_project_id)
       end
