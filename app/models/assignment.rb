@@ -1,4 +1,6 @@
-class Assignment < ActiveRecord::Base  
+class Assignment < ActiveRecord::Base
+  attr_accessible :issues
+
   belongs_to :product
 	belongs_to :version
 	belongs_to :test_plan
@@ -13,4 +15,6 @@ class Assignment < ActiveRecord::Base
 
 	validates :product_id, :presence => true
 	validates :version_id, :presence => true
+
+  validates_format_of :issues, :with => /^[-a-zA-Z0-9]+([-a-zA-Z0-9,]+)*$/, :allow_nil => true, :allow_blank => true
 end

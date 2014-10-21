@@ -23,7 +23,7 @@ module ApplicationHelper
   
   # alphabetical list of all products
   def product_list
-    current_user.products.order('name').collect {|p| [ p.name, p.id ]}
+    current_user.products.order('name').collect {|p| [ p.name, p.ticket_project_id, p.id ]}
   end
   
   # Takes a category ID and returns a complete path
@@ -54,5 +54,4 @@ module ApplicationHelper
     # We preserve them for use when a search and then order is selected
     link_to title, {:sort => column, :direction => direction, :product => params[:product], :version => params[:version]}, {:class => css_class}
   end
-  
 end

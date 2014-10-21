@@ -1,3 +1,4 @@
+<% issues = issues_list(@assignment)%>
 <div class="row-fluid">
   <div class="span12">
     <legend class="show">Assignment Overview</legend>
@@ -108,8 +109,31 @@
         </tr>
       <% end %>
     </table>
-    
+  </div>
 </div>
+<% if issues.any? %>
+  <div class="row-fluid">
+    <div class="span12">
+      <legend class="show">Issues</legend>
+      <table class="sortable_table">
+        <tr class="sortableHeader">
+          <th>Id</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+        <% issues.each do |issue| %>
+          <tr class="<%= cycle('odd', 'even') %>">
+            <td><%= issue[0] %></td>
+            <td><%= issue[1][:name] %></td>
+            <td><%= issue[1][:description] %></td>
+            <td><%= issue[1][:status] %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+<% end %>
 
 <div class="addLink">
 <% if can? :update, Assignment %>

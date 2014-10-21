@@ -86,7 +86,6 @@ class AssignmentsController < ApplicationController
       # Verify user can view items for this product. Must be in his product
       authorize_product!(@assignment.product)
     end
-    
     #!# @versions = Version.find(:all)
     #!# @plans_select = TestPlan.find(:all).collect {|p| [ p.name + " | Version " + p.version.to_s, p.id ]}
     
@@ -102,7 +101,7 @@ class AssignmentsController < ApplicationController
     
     # Verify user can view items for this product. Must be in his product
     authorize_product!(@assignment.product)
-    
+    @assignment.issues = @assignment.issues.split(',')
     # This is for the related created task
     @users_select = User.find(:all, :order => "last_name").collect {|u| [ u.first_name + ' ' + u.last_name, u.id ]}
   end
@@ -142,7 +141,11 @@ class AssignmentsController < ApplicationController
       # and status to assigned
       @assignment.task.task = 4
       @assignment.task.status = 0
-
+      if(@assignment.issues.any?)
+        @assignment.issues = @assignment.issues.reject(&:blank?).join(',')
+      else
+        @assignment.issues = ""
+      end
       saveResult = @assignment.save
 
       # Only add the results if save was successful. Missed this earlier and was getting blank result items
@@ -198,7 +201,12 @@ class AssignmentsController < ApplicationController
 
     # Verify user can view items for this product. Must be in his product
     authorize_product!(@assignment.product)
-    
+    params[:assignment][:issues]
+    if(params[:assignment][:issues].any?)
+        params[:assignment][:issues] = params[:assignment][:issues].reject(&:blank?).join(',')
+      else
+        params[:assignment][:issues] = ""
+      end
     respond_to do |format|
       if @assignment.update_attributes(params[:assignment])
         # Create item in log history
@@ -267,7 +275,19 @@ class AssignmentsController < ApplicationController
     stencils = Stencil.where(:product_id => params[:id]).order(:name) unless params[:id].blank?
     render :partial => "stencils", :locals => { :stencils => stencils }
   end
-  
+
+  def update_ticket_issue_select
+    product = Product.find(params[:productid])
+    authorize_product!( product )
+    version = Version.find(params[:versionid])
+    issues = {}
+    if (product.ticket_project_id.present? and version.ticket_version_id.present?)
+      issues = Ticket.project_issues(product.ticket_project_id, version.ticket_version_id)
+      issues = issues.sort_by { |issue| issue[:id].to_i }.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
+    end
+    render :partial => "ticket_issues", :locals => { :issues => issues }
+  end
+
   private
 
   # Functions for sorting columns

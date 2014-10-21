@@ -27,6 +27,33 @@ module AssignmentsHelper
     end
   end
   
+  def ticket_issues(product_id, product_version = 0)
+    issues = {}
+    if(product_id.present?)
+      product = Product.find(product_id)
+      if (product.ticket_project_id.present?)
+        version = Version.find(product_version)
+        if(version.ticket_version_id.present?)
+          issues = Ticket.project_issues(product.ticket_project_id.to_i, version.ticket_version_id.to_i)
+        else
+          issues = Ticket.project_issues(product.ticket_project_id)
+        end
+        issues = issues.sort_by { |issue| issue[:id].to_i }.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
+      end
+    end
+    return issues
+  end
+
+  def issues_list(assignment)
+    if assignment.id
+      if assignment.issues
+        Ticket.bug_status(assignment.issues.split(','))
+      else
+        []
+      end
+    end
+  end
+
   def version_list(product_id)
     if product_id.blank?
       []

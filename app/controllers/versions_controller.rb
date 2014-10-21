@@ -130,6 +130,18 @@ class VersionsController < ApplicationController
       end
     end
   end
+
+  # versions/update_ticket_version_select/1
+  # Get the versions for the current product
+  # Then render the small versions drop down partial  
+  def update_ticket_version_select
+    product = Product.find(params[:id])
+    authorize_product!( product )
+
+    ticket_version = Ticket.project_version(product.ticket_project_id) unless product.blank?
+    ticket_version = ticket_version.sort_by { |t_v| t_v[:name] }.reverse
+    render :partial => "ticket_versions", :locals => { :ticket_version => ticket_version }
+  end
   
   private
   

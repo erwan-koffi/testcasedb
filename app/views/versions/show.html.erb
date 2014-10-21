@@ -1,3 +1,5 @@
+<% ticket_version = ticket_version_name(@version.ticket_version_id)%>
+
 <h2>Version: <%= @version.version %></h2>
 
 <div class="row-fluid">
@@ -19,6 +21,17 @@
           <td class="title">Product</td>
           <td><%= @version.product.name %></td>
         </tr>
+        <% if Setting.value('Ticket System').present? %>
+          <tr>
+            <td class="title">Ticketing Version</td>
+            <td><%= ticket_version[:name] %></td>
+          </tr>
+
+          <tr>
+            <td class="title">Ticketing Version Description</td>
+            <td><%= ticket_version[:description] %></td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>

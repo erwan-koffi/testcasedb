@@ -1,3 +1,5 @@
+<% ticket_project = ticket_project_name(@product.ticket_project_id)%>
+
 <h1>Product: <%= @product.name %></h1>
 
 <div class="row-fluid">
@@ -13,6 +15,16 @@
           <td class="title">Description</td>
           <td><%= @product.description %></td>
         </tr>
+        <% if (Setting.value('Ticket System').present?) %>
+          <tr>
+            <td class="title">Ticketing Project</td>
+            <td><%= ticket_project[:name] %></td>
+          </tr>
+          <tr>
+            <td class="title">Ticketing Project Description</td>
+            <td><%= format_project_description(ticket_project[:description]).html_safe %></td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
