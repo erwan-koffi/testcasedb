@@ -31,13 +31,15 @@ module AssignmentsHelper
     issues = {}
     if(product_id.present?)
       product = Product.find(product_id)
-      if product_version != 0
+      if (product.ticket_project_id.present?)
         version = Version.find(product_version)
-        issues = Ticket.project_issues(product.ticket_project_id.to_i, version.ticket_version_id.to_i)
-      else
-        issues = Ticket.project_issues(product.ticket_project_id)
+        if(version.ticket_version_id.present?)
+          issues = Ticket.project_issues(product.ticket_project_id.to_i, version.ticket_version_id.to_i)
+        else
+          issues = Ticket.project_issues(product.ticket_project_id)
+        end
+        issues = issues.sort_by { |issue| issue[:id].to_i }.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
       end
-      issues = issues.sort_by { |issue| issue[:id].to_i }.collect { |item| [item[:id] + " " + item[:name], item[:id]]  }
     end
     return issues
   end
