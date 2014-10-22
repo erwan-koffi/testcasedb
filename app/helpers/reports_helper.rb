@@ -174,7 +174,7 @@ module ReportsHelper
   def test_cases_in_version_and_dates(version, start_time, end_time)
     results_found =
       Result.where(
-        :assignment_id => Assignment.where(:version_id => version1),
+        :assignment_id => Assignment.where(:version_id => version),
         :executed_at => start_time.beginning_of_day..end_time.end_of_day
       ).joins(:assignment).joins(:test_plan)
 
