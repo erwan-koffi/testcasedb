@@ -1,19 +1,21 @@
 <table class="sortable_table">
-  <tr class="sortableHeader">
-    <th>Test Plan</th>
-    <th>Test Case</th>
-    <th><%= @report.version.version %> Result</th>
-    <th><%= @report.version.version %> Comment</th>
-  </tr>
-
-  <% test_cases_in_versions(@report.version).each do |result|%>
-    <tr class="<%= cycle('odd', 'even') %>">
-      <td><%= result[:tp_name] %> - Version <%= result[:tp_version] %></td>
-      <td><%= link_to result[:name], result %> - Version <%= result[:tc_version] %></td>
-      <td><%= result[:v1_result] %></td>
-      <td><%= result[:v1_comment] %></td>
+  <thead>
+    <tr class="sortableHeader">
+      <th>Test Plan</th>
+      <th>Test Case</th>
+      <th><%= @report.version.version %> Result</th>
+      <th><%= @report.version.version %> Comment</th>
     </tr>
-  <% end %>
-
+  </thead>
+  <tbody>
+    <% test_cases_in_version_and_dates(@report.version, @report.start_date, @report.end_date).each do |result|%>
+      <tr class="<%= cycle('odd', 'even') %>">
+        <td><%= result[:tp_name] %> - Version <%= result[:tp_version] %></td>
+        <td><%= link_to result[:name], result %> - Version <%= result[:tc_version] %></td>
+        <td><%= result[:v1_result] %></td>
+        <td><%= result[:v1_comment] %></td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 <br/>

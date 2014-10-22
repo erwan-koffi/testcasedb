@@ -170,16 +170,35 @@ module ReportsHelper
 
     return bug_results
   end
-  
-  def test_cases_in_versions(version1, version2 = nil)
-    results1 = Result.where(:assignment_id => Assignment.where(:version_id => version1)).joins(:assignment).joins(:test_plan)
-    results2 =[]
-    unless version2.nil? then
-      results2 = Result.where(:assignment_id => Assignment.where(:version_id => version2)).joins(:assignment).joins(:test_plan)
-    end
+
+  def test_cases_in_version_and_dates(version, start_time, end_time)
+    results_found =
+      Result.where(
+        :assignment_id => Assignment.where(:version_id => version1),
+        :executed_at => start_time.beginning_of_day..end_time.end_of_day
+      ).joins(:assignment).joins(:test_plan)
 
     results = []
+    results_found.each do |res|
+      results << {
+        :tp_id => res.assignment.test_plan.id,
+        :tp_name => res.assignment.test_plan.name,
+        :tp_version => res.assignment.test_plan.version,
+        :tc_id => res.test_case_id,
+        :name => res.test_case.name,
+        :v1_result => res.result, 
+        :v1_comment => res.note,
+        :tc_version => res.test_case.version
+      }
+    end
+    return results
+  end
 
+  def test_cases_in_versions(version1, version2)
+    results1 = Result.where(:assignment_id => Assignment.where(:version_id => version1)).joins(:assignment).joins(:test_plan)
+    results2 = Result.where(:assignment_id => Assignment.where(:version_id => version2)).joins(:assignment).joins(:test_plan)
+
+    results = []
     results1.each do |result|
       results << {:tp_id => result.assignment.test_plan.id,
                   :tp_name => result.assignment.test_plan.name,
@@ -200,7 +219,7 @@ module ReportsHelper
           old_result[:v2_comment] = result.note
         end
       end
-      
+
       unless found
         results << {:tp_id => result.assignment.test_plan.id,
                     :tp_name => result.assignment.test_plan.name,
