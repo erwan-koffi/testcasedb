@@ -23,9 +23,28 @@ module ApplicationHelper
   
   # alphabetical list of all products
   def product_list
-    current_user.products.order('name').collect {|p| [ p.name, p.id ]}
+    current_user.products.order('name').collect {|p| [ p.name, p.ticket_project_id, p.id ]}
   end
-  
+
+  def format_ticket_text(description)
+    description_html = ""
+    ticket_system = Setting.value('Ticket System')
+    if (ticket_system.present? && description.present?)
+      description_html = description
+      #TODO transform into html for each Ticket system
+      if (ticket_system == 'Redmine')
+        bold_regxp = /\*(.*?)\*/
+        image_regxp = /!(.*?)!/
+        description_html = description_html.gsub(bold_regxp) {|s| '<b>' + s.gsub(/\*/, '') + '</b>' }
+        description_html = description_html.gsub(image_regxp) {|s| '<img src="' + s.gsub(/!/, '') + '" />' }
+        description_html = description_html.sub(/\A\* /, '<i class="icon-chevron-right"></i>')
+        description_html = description_html.gsub(/(\* )/) {|s| '<br>' + '<i class="icon-chevron-right"></i>' }
+        #TODO h3., >, + etc.
+      end
+    end
+    return description_html
+  end
+
   # Takes a category ID and returns a complete path
   # category as a string
   def CategoryPathName(category_id)
@@ -54,5 +73,4 @@ module ApplicationHelper
     # We preserve them for use when a search and then order is selected
     link_to title, {:sort => column, :direction => direction, :product => params[:product], :version => params[:version]}, {:class => css_class}
   end
-  
 end

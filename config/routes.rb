@@ -54,6 +54,7 @@ TestDB::Application.routes.draw do
   match 'assignments/update_version_select/:id', :controller=>'assignments', :action => 'update_version_select'
   match 'assignments/update_test_plan_select/:id', :controller=>'assignments', :action => 'update_test_plan_select'
   match 'assignments/update_stencil_select/:id', :controller=>'assignments', :action => 'update_stencil_select'
+  match 'assignments/update_ticket_issues_select/:productid/:versionid', :controller=>'assignments', :action => 'update_ticket_issue_select'
   # The 2 routes below below somewhat dangerous, but are actually dumbies.
   # In order to make the uodate_version_select and test plan jquerywork in the assignments form, we make this fake url
   # and then append the id in javascript. This should newver be called directly. Only the line above should be called
@@ -61,6 +62,7 @@ TestDB::Application.routes.draw do
   match 'assignments/update_version_select/', :controller=>'assignments', :action => 'update_version_select', :as => 'jquery_assignment_version_update'
   match 'assignments/update_test_plan_select/', :controller=>'assignments', :action => 'update_test_plan_select', :as => 'jquery_assignment_test_plan_update'
   match 'assignments/update_stencil_select/', :controller=>'assignments', :action => 'update_stencil_select', :as => 'jquery_assignment_stencil_update'
+  match 'assignments/update_ticket_issues_select/', :controller=>'assignments', :action => 'update_ticket_issue_select', :as => 'jquery_assignment_ticket_issue_update'
     
   # Download an attachment  
   # Had to swap to asterisk. Called globbing. Used in case there is filename with multiple periods.
@@ -107,6 +109,7 @@ TestDB::Application.routes.draw do
   match '/auth/:provider/callback', to: 'authentications#create'
   match '/auth/failure', to: 'authentications#failure'
 
+  match 'users/import/', :controller => 'users', :action => 'import', :as => 'import_user'
   resources :users
   get 'users/:id/reset', :controller => 'users', :action => 'reset', :as => 'reset_user'
   match "/my_settings" => "users#my_settings", :as => 'my_settings'
@@ -122,6 +125,8 @@ TestDB::Application.routes.draw do
   get 'uploads/:id' => 'uploads#show', :as => 'upload'
 
   resources :versions
+  match 'versions/update_ticket_version_select/:id', :controller=>'versions', :action => 'update_ticket_version_select'
+  match 'versions/update_ticket_version_select/', :controller=>'versions', :action => 'update_ticket_version_select', :as => 'jquery_version_ticket_version_update'
 
 	get '/test_plans/search/', :controller => 'test_plans', :action => 'search', :as => 'test_plan_search'
   resources :test_plans do

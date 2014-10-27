@@ -169,14 +169,229 @@ class Ticket
           
           # and add the status to the hash
           # We need the value of name for the status element
-          bug_status[id] = { :status => xmlResult.elements["//status"].attributes["name"], :name => xmlResult.elements["//subject"].text }
+          bug_status[id] = { :id => xmlResult.elements["//id"].text,
+                             :status => xmlResult.elements["//status"].attributes["name"],
+                             :name => xmlResult.elements["//subject"].text,
+                             :description => xmlResult.elements["//description"].text }
         else
           bug_status["error"] = true
         end
       end
     end
 
-    return bug_status    
+    return bug_status
+  end
+
+  def self.project_issues(project_id, version_id = 0)
+    issues = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Build the URI
+      # It is assumed that the URL fully includes the API path
+      parameters = 'project_id=' + project_id.to_s + '&limit=200&status_id=*'
+      if version_id != 0
+        parameters = parameters + '&fixed_version_id=' + version_id.to_s
+      end
+      uri = URI(settings["url"] + 'issues.xml?' + parameters)
+      # Build the requests
+      req = Net::HTTP::Get.new(uri.request_uri)
+      # Add authentication info
+      req.basic_auth settings['username'], settings['password']
+      # Enable ssl if uri starts with https
+      if uri.scheme == "https"
+        req.use_ssl = true
+        # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      # Run the request
+      result = Net::HTTP.start(uri.host, uri.port) {|http|
+        http.request(req)
+      }
+
+      # Was there a 2xx pass result
+      if Net::HTTPSuccess === result
+        # Result is in xml... break it down
+        xml_result = REXML::Document.new(result.body)
+
+        # and add the status to the hash
+        # We need the value of name for the status element
+        xml_result.elements.each("//issue") do
+          |element|
+          issue = {}
+          issue[:id] = element.elements["id"].text
+          issue[:status] = element.elements["status"].attributes["name"]
+          issue[:name] = element.elements["subject"].text
+          issue[:description] = element.elements["description"].text
+          issue[:version] = element.elements["fixed_version"].attributes["name"]
+          issues.push(issue)
+        end
+      else
+        issues["error"] = true
+      end
+    end
+    return issues
+  end
+
+  def self.projects
+    ticket_projects = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Build the URI
+      # It is assumed that the URL fully includes the API path
+      uri = URI(settings["url"] + 'projects.xml')
+      # Build the requests
+      req = Net::HTTP::Get.new(uri.request_uri)
+      # Add authentication info
+      req.basic_auth settings['username'], settings['password']
+      # Enable ssl if uri starts with https
+      if uri.scheme == "https"
+        req.use_ssl = true
+        # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      # Run the request
+      result = Net::HTTP.start(uri.host, uri.port) {|http|
+        http.request(req)
+      }
+
+      # Was there a 2xx pass result
+      if Net::HTTPSuccess === result
+        # Result is in xml... break it down
+        xml_result = REXML::Document.new(result.body)
+        
+        # and add the status to the hash
+        # We need the value of name for the status element
+        xml_result.elements.each("//project") do
+          |element|
+          ticket_project = {}
+          ticket_project[:id] = element.elements["id"].text
+          ticket_project[:name] = element.elements["name"].text
+          ticket_projects.push(ticket_project)
+        end
+      end
+    end
+    return ticket_projects
+  end
+
+  def self.projects_info(ids)
+    ticket_project = {}
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Mantis, need to query each bug one by one and add to hash
+      ids.each do |id|
+        # Build the URI
+        # It is assumed that the URL fully includes the API path
+        uri = URI(settings["url"] + 'projects/' + id + '.xml')
+        # Build the requests
+        req = Net::HTTP::Get.new(uri.request_uri)
+        # Add authentication info
+        req.basic_auth settings['username'], settings['password']
+        # Enable ssl if uri starts with https
+        if uri.scheme == "https"
+          req.use_ssl = true
+          # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+        # Run the request
+        result = Net::HTTP.start(uri.host, uri.port) {|http|
+          http.request(req)
+        }
+  
+        # Was there a 2xx pass result
+        if Net::HTTPSuccess === result
+          # Result is in xml... break it down
+          xml_result = REXML::Document.new(result.body)
+          
+          # and add the status to the hash
+          # We need the value of name for the status element
+          ticket_project[id] = { :name => xml_result.elements["//name"].text, :description => xml_result.elements["//description"].text }
+        else
+          ticket_project["error"] = true
+        end
+      end
+    end
+    return ticket_project
+  end
+
+  def self.project_version(project_id)
+    ticket_versions = []
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Build the URI
+      # It is assumed that the URL fully includes the API path
+      uri = URI(settings["url"] + 'projects/' + project_id + '/versions.xml')
+      # Build the requests
+      req = Net::HTTP::Get.new(uri.request_uri)
+      # Add authentication info
+      req.basic_auth settings['username'], settings['password']
+      # Enable ssl if uri starts with https
+      if uri.scheme == "https"
+        req.use_ssl = true
+        # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      # Run the request
+      result = Net::HTTP.start(uri.host, uri.port) {|http|
+        http.request(req)
+      }
+
+      # Was there a 2xx pass result
+      if Net::HTTPSuccess === result
+        # Result is in xml... break it down
+        xml_result = REXML::Document.new(result.body)
+        
+        # and add the status to the hash
+        # We need the value of name for the status element
+        xml_result.elements.each("//version") do
+          |element|
+          ticket_version = {}
+          ticket_version[:id] = element.elements["id"].text
+          ticket_version[:name] = element.elements["name"].text
+          ticket_version[:description] = element.elements["description"].text
+          ticket_version[:status] = element.elements["status"].text
+          ticket_versions.push(ticket_version)
+        end
+      end
+    end
+    return ticket_versions
+  end
+
+  def self.versions_info(ids)
+    ticket_version = {}
+    settings = ticket_settings()
+    if settings["system"] == 'Redmine'
+      # Mantis, need to query each bug one by one and add to hash
+      ids.each do |id|
+        # Build the URI
+        # It is assumed that the URL fully includes the API path
+        uri = URI(settings["url"] + 'versions/' + id.to_s + '.xml')
+        # Build the requests
+        req = Net::HTTP::Get.new(uri.request_uri)
+        # Add authentication info
+        req.basic_auth settings['username'], settings['password']
+        # Enable ssl if uri starts with https
+        if uri.scheme == "https"
+          req.use_ssl = true
+          # req.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+        # Run the request
+        result = Net::HTTP.start(uri.host, uri.port) {|http|
+          http.request(req)
+        }
+  
+        # Was there a 2xx pass result
+        if Net::HTTPSuccess === result
+          # Result is in xml... break it down
+          xml_result = REXML::Document.new(result.body)
+          
+          # and add the status to the hash
+          # We need the value of name for the status element
+          ticket_version[id] = {
+            :name => xml_result.elements["//name"].text,
+            :description => xml_result.elements["//description"].text,
+            :status => xml_result.elements["//status"].text }
+        else
+          ticket_version["error"] = true
+        end
+      end
+    end
+    return ticket_version
   end
 
   private 

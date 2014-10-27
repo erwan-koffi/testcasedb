@@ -9,3 +9,4 @@ config/app_config.yml
 public/assets/
 .buildpath
 .project
+nbproject/
