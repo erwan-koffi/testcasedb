@@ -29,7 +29,7 @@
 
           <tr>
             <td class="title">Ticketing Version Description</td>
-            <td><%= ticket_version[:description] %></td>
+            <td><%= format_ticket_text(ticket_version[:description]) %></td>
           </tr>
         <% end %>
       </tbody>

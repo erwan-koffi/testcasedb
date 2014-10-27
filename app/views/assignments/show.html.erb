@@ -126,7 +126,7 @@
           <tr class="<%= cycle('odd', 'even') %>">
             <td><%= issue[0] %></td>
             <td><%= issue[1][:name] %></td>
-            <td><%= issue[1][:description] %></td>
+            <td><%= format_ticket_text(issue[1][:description]).html_safe %></td>
             <td><%= issue[1][:status] %></td>
           </tr>
         <% end %>
@@ -140,4 +140,5 @@
 <%= link_to "Edit", edit_assignment_path(@assignment), :class => "btn btn-primary"  %>
 <% end %>
 <a href='#' onclick='history.go(-1);return false;', class="btn btn-inverse">Back</a>
+<%= link_to "Export PDF", assignment_path(@assignment, :format => "pdf"), :class => "btn btn-info"%>
 </div>

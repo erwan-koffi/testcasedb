@@ -23,14 +23,4 @@ module ProductsHelper
       ticket_product[id]
     end
   end
-
-  def format_project_description(description)
-    if (description.present?)
-      description.gsub(description[/\*(.*?)\*/],
-        "<b>" + description[/\*(.*?)\*/, 1] + "</b>").gsub(description[/!(.*?)!/],
-        "<img src=\"" + description[/!(.*?)!/, 1] + "\" />")
-    else
-      ""
-    end
-  end
 end

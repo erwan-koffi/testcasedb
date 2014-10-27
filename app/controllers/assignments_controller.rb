@@ -40,6 +40,7 @@ class AssignmentsController < ApplicationController
 
   # GET /assignments/1
   # GET /assignments/1.xml
+  # GET /assignments/1.pdf
   def show
     authorize! :read, Assignment
     @assignment = Assignment.find(params[:id])
@@ -55,6 +56,12 @@ class AssignmentsController < ApplicationController
     @results = Result.where(:assignment_id => @assignment.id).order('id').includes(:test_case)
     respond_to do |format|
       format.html # show.html.erb
+      format.pdf do
+        pdf = AssignmentPdf.new(@assignment, view_context)
+        send_data pdf.render, :filename => "assignment_#{@assignment.id}.pdf",
+                              :type => "application/pdf",
+                              :disposition => "inline"
+      end
     end
   end
 
