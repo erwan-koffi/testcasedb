@@ -90,6 +90,13 @@ jQuery(function($) {
       $("#report_start_date_select").hide();
       $("#report_end_date_select").hide();
     }
+    else if ( select_item.val() == "Release Results - Detailed" ) {
+      $("#report_product_select").show();
+      $("#report_version_select").show();
+      $("#report_second_version_select").hide();
+      $("#report_start_date_select").show();
+      $("#report_end_date_select").show();
+    }
     else if ( select_item.val() == "Test Cases without Steps" ) {
       $("#report_product_select").show();
       $("#report_version_select").hide();

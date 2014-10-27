@@ -1,5 +1,5 @@
 module ReportsHelper
-  REPORT_TYPES = ["System Status", "Release Current State", "Release Current State - By User", "Release Progress - Daily", "Compare Release Results", "Test Cases without Steps", "Open Tasks", "Release Bug Report", "Compare Release Results - Detailed" ]
+  REPORT_TYPES = ["System Status", "Release Current State", "Release Current State - By User", "Release Progress - Daily", "Compare Release Results", "Test Cases without Steps", "Open Tasks", "Release Bug Report", "Compare Release Results - Detailed", "Release Results - Detailed" ]
   
   # returns a s list of users for a select item
   # def user_list()
@@ -63,7 +63,7 @@ module ReportsHelper
     cumulative_total = 0
     output = []
     (start_time..end_time).map do |date|
-      result = results_by_day.detect { |result| result[0].to_date == date }      
+      result = results_by_day.detect { |res| res[0].to_date == date }
       if result then cumulative_total += result[1].to_i end
       output.push [date.to_time.to_i * 1000, cumulative_total]
     end
@@ -170,13 +170,35 @@ module ReportsHelper
 
     return bug_results
   end
-  
+
+  def test_cases_in_version_and_dates(version, start_time, end_time)
+    results_found =
+      Result.where(
+        :assignment_id => Assignment.where(:version_id => version),
+        :executed_at => start_time.beginning_of_day..end_time.end_of_day
+      ).joins(:assignment).joins(:test_plan)
+
+    results = []
+    results_found.each do |res|
+      results << {
+        :tp_id => res.assignment.test_plan.id,
+        :tp_name => res.assignment.test_plan.name,
+        :tp_version => res.assignment.test_plan.version,
+        :tc_id => res.test_case_id,
+        :name => res.test_case.name,
+        :v1_result => res.result, 
+        :v1_comment => res.note,
+        :tc_version => res.test_case.version
+      }
+    end
+    return results
+  end
+
   def test_cases_in_versions(version1, version2)
     results1 = Result.where(:assignment_id => Assignment.where(:version_id => version1)).joins(:assignment).joins(:test_plan)
     results2 = Result.where(:assignment_id => Assignment.where(:version_id => version2)).joins(:assignment).joins(:test_plan)
 
     results = []
-
     results1.each do |result|
       results << {:tp_id => result.assignment.test_plan.id,
                   :tp_name => result.assignment.test_plan.name,
@@ -197,7 +219,7 @@ module ReportsHelper
           old_result[:v2_comment] = result.note
         end
       end
-      
+
       unless found
         results << {:tp_id => result.assignment.test_plan.id,
                     :tp_name => result.assignment.test_plan.name,

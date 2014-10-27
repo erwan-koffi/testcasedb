@@ -12,6 +12,8 @@
   <%= render 'compare_release_results' %>
 <% when @report.report_type == "Compare Release Results - Detailed" %>
   <%= render 'compare_release_results_detailed' %>
+<% when @report.report_type == "Release Results - Detailed" %>
+  <%= render 'release_results_detailed' %>
 <% when @report.report_type == "Test Cases without Steps" %>
   <%= render 'test_cases_without_steps' %>
 <% when @report.report_type == "Open Tasks" %>
