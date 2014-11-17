@@ -1,4 +1,4 @@
-<legend>Test Case Upload</legend>
+<legend>Import Users</legend>
 <%= form_for("user", :html => { :multipart => true }, :url => import_user_path, :class => "form-horizontal") do |f| %>
 
     <% if defined? @errors %>
@@ -18,7 +18,7 @@
       </div>
     <% end %>
    <div class="field">
-     File: <%= f.file_field :upload, :accept => 'application/vnd.ms-excel' %>
+     File: <%= f.file_field :upload, :accept => 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv' %>
    </div>
 
   <%= f.submit "Import Users", :class => "btn btn-success" %>

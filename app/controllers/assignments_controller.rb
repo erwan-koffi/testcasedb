@@ -93,8 +93,15 @@ class AssignmentsController < ApplicationController
       # Verify user can view items for this product. Must be in his product
       authorize_product!(@assignment.product)
     end
+    
     #!# @versions = Version.find(:all)
     #!# @plans_select = TestPlan.find(:all).collect {|p| [ p.name + " | Version " + p.version.to_s, p.id ]}
+
+    # Make a list of all applicable custom fields and add to the result item
+    custom_fields = CustomField.where(:item_type => 'assignment', :active => true)
+    custom_fields.each do |custom_field|
+      @assignment.custom_items.build(:custom_field_id => custom_field.id)
+    end
     
     respond_to do |format|
       format.html # new.html.erb
@@ -108,6 +115,17 @@ class AssignmentsController < ApplicationController
     
     # Verify user can view items for this product. Must be in his product
     authorize_product!(@assignment.product)
+
+  	# We need to make sure that all custom fields exist on this item. If not, we add them.
+  	# Find all applicable custom fields
+  	custom_fields = CustomField.where(:item_type => 'assignment', :active => true)
+  	custom_fields.each do |custom_field|
+    # If an entry for the current field doesn't exist, add it.
+    	if @assignment.custom_items.where(:custom_field_id => custom_field.id).first == nil
+   		   @assignment.custom_items.build(:custom_field_id => custom_field.id)
+    	end
+  	end
+    
     @assignment.issues = @assignment.issues.split(',')
     # This is for the related created task
     @users_select = User.find(:all, :order => "last_name").collect {|u| [ u.first_name + ' ' + u.last_name, u.id ]}
@@ -128,10 +146,10 @@ class AssignmentsController < ApplicationController
       @assignment.errors.add :version, ' can\'t be blank'
       saveResult = nil
     elsif (@assignment.test_plan == nil) and (@assignment.stencil == nil)
-      @assignment.errors.add :product_id, ' or a stencil should be selected.'
+      @assignment.errors.add :product_id, 'Test plan or a stencil should be selected.'
       saveResult = nil
     elsif ((@assignment.test_plan != nil) and (@assignment.stencil != nil))
-      @assignment.errors.add :product_id, ' or a stencil should be selected. You cannot select both.'
+      @assignment.errors.add :product_id, 'Test plan or a stencil should be selected. You cannot select both.'
       saveResult = nil
     else
       # Next we decide if it is a test plan of stencil to be executed
@@ -153,6 +171,7 @@ class AssignmentsController < ApplicationController
       else
         @assignment.issues = ""
       end
+
       saveResult = @assignment.save
 
       # Only add the results if save was successful. Missed this earlier and was getting blank result items
@@ -214,6 +233,7 @@ class AssignmentsController < ApplicationController
       else
         params[:assignment][:issues] = ""
       end
+    
     respond_to do |format|
       if @assignment.update_attributes(params[:assignment])
         # Create item in log history
