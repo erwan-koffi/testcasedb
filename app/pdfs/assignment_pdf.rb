@@ -10,6 +10,7 @@ class AssignmentPdf < Prawn::Document
     assignment_title_page
     assignment_plan_page
     print_issues
+    print_test_cases_results
   end
 
   def assignment_title_page
@@ -76,11 +77,35 @@ class AssignmentPdf < Prawn::Document
     end
   end
 
-  def list_test_cases()
+  def list_test_cases
     [["Name", "Category", "Version", "Description", "Result", "Date"]] +
     @assignment.results.order.map do |result|
       time = result.executed_at.blank? ? "" : result.executed_at.strftime("%F %T")
       [result.test_case.name, @view.CategoryPathName(result.test_case.category_id), result.test_case.version, result.test_case.description, result.result, time]
+    end
+  end
+
+  def print_test_cases_results
+    start_new_page
+    @assignment.results.order.map do |result|
+      text "<b>Test Case:</b> #{result.test_case.name}", :size => 12, :inline_format => true
+      text "<b>Category:</b> #{@view.CategoryPathName(result.test_case.category_id)}", :size => 12, :inline_format => true
+      text "<b>Version:</b> #{result.test_case.version}", :inline_format => true
+      text "<b>Description:</b> #{result.test_case.description}", :inline_format => true
+      move_down 5
+      if (result.result == 'Passed')
+        fill_color "00AA000"
+      elsif (result.result == 'Failed')
+        fill_color "AA0000"
+      else
+        fill_color "E8A317"
+      end
+      text "<b>Result:</b> #{result.result}", :inline_format => true, :color => 'green'
+      fill_color "0000000"
+      text "<b>Note:</b> #{result.note}", :inline_format => true
+      move_down 10
+      stroke_horizontal_rule
+      move_down 20
     end
   end
 end

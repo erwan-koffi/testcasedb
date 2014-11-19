@@ -125,8 +125,9 @@ class AssignmentsController < ApplicationController
    		   @assignment.custom_items.build(:custom_field_id => custom_field.id)
     	end
   	end
-    
-    @assignment.issues = @assignment.issues.split(',')
+    if !@assignment.issues.nil?
+      @assignment.issues = @assignment.issues.split(',')
+    end
     # This is for the related created task
     @users_select = User.find(:all, :order => "last_name").collect {|u| [ u.first_name + ' ' + u.last_name, u.id ]}
   end
