@@ -82,5 +82,7 @@ module TestDB
     # Assets based config 
     config.assets.enabled = true
     config.assets.version = '1.1'
+
+    config.i18n.enforce_available_locales = true
   end
 end
