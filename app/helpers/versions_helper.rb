@@ -7,10 +7,9 @@ module VersionsHelper
       |product|
       versions << { :id => product[2], :versions => Ticket.project_version(product[1].to_s) }
     end
-    if versions[product_id].present?
-      versions[product_id][:versions].collect { |v| [v[:name], v[:id]] }.sort.reverse
-    else
-      []
+    version = versions.select { |version| version[:id] == product_id }
+    if version.present?
+      version.pop[:versions].collect { |v| [v[:name], v[:id]] }.sort.reverse
     end
   end
 
