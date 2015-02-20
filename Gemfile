@@ -6,6 +6,8 @@ gem 'pg', group: :postgres
 
 gem "unicorn", "~> 4.8.2"
 
+gem 'sidekiq'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -18,6 +20,8 @@ group :assets do
   gem 'therubyracer', :platforms => :ruby
 end
 
+gem 'best_in_place', '~> 3.0.1'
+gem 'jquery-fileupload-rails'
 gem 'sass-rails',   '~> 3.2.3'
 gem 'bootstrap-sass', '~> 2.3.2.1'
 
@@ -56,6 +60,7 @@ gem 'authlogic'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'cancan'
+gem 'redis-rails'
 
 gem 'kaminari'
 

@@ -120,15 +120,11 @@ TestDB::Application.routes.draw do
   match "/my_settings" => "users#my_settings", :as => 'my_settings'
   match "/update_settings" => "users#update_my_settings", :as => 'update_my_settings'
     
-  # Save attachments on results    
-  post 'results/:result_id/uploads/' => 'uploads#create', :as => 'result_uploads'
-  # Save attachments on test cases    
-  post 'test_cases/:test_case_id/uploads(.:format)' => 'uploads#create', :as => 'test_case_uploads'
-  # MAke upload executable
-  get 'uploads/:id/executable' => 'uploads#executable', :as => 'make_upload_executable'
-  delete 'uploads/:id' => 'uploads#destroy'
-  get 'uploads/:id' => 'uploads#show', :as => 'upload'
-
+  resources :uploads do
+    member do
+      get 'executable'
+    end
+  end
   resources :versions
   match 'versions/update_ticket_version_select/:id', :controller=>'versions', :action => 'update_ticket_version_select'
   match 'versions/update_ticket_version_select/', :controller=>'versions', :action => 'update_ticket_version_select', :as => 'jquery_version_ticket_version_update'

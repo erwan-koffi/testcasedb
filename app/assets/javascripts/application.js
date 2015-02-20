@@ -4,6 +4,9 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require jquery.ui.all
+//= require jquery-fileupload/basic
+//= require jquery-fileupload/vendor/tmpl
+//= require best_in_place
 //= require_tree .
 
 jQuery(function($) {
@@ -176,6 +179,26 @@ jQuery(function($) {
         window.location = $(this).find('a').attr('href');
       }
     });
+    
+    $('#new_upload').fileupload({
+      dataType: "script",
+      add: function(e, data) {
+        data.context = $(tmpl("template-upload", data.files[0]));
+        $('#new_upload').append(data.context);
+        return data.submit();
+      },
+      progress: function(e, data) {
+        var progress;
+        if (data.context) {
+          progress = parseInt(data.loaded / data.total * 100, 10);
+          return data.context.find('.bar').css('width', progress + '%');
+        }
+      },
+      done: function(e, data) {
+        return data.context.remove();
+      }
+    });
+    jQuery(".best_in_place").best_in_place();
 
   });
   
@@ -242,6 +265,7 @@ jQuery(function($) {
     $(this).parent().children().removeClass('active');
     $(this).addClass('active');
   });
+  
 })
 
 jQuery(function() {
