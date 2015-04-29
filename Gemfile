@@ -51,6 +51,7 @@ gem 'mime-types', '~> 2.5'
 # Paperclip requires that ImageMagick is installed on the system
 
 gem 'chosen-rails', '~> 1.4.1'
+gem "compass-rails", github: "Compass/compass-rails", branch: "master"
 gem 'spreadsheet', '~> 1.0.3'
 
 gem 'rake', '~> 10.4.2'
@@ -91,6 +92,9 @@ gem 'selenium-client', '~> 1.2.18'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
+#Only before applicaiton has been migrated to rails 5.0
+gem 'protected_attributes'
+
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
@@ -99,6 +103,7 @@ gem 'selenium-client', '~> 1.2.18'
 # end
 # gem "mocha", :group => :test
 gem 'blitz'
+gem 'test-unit'
 group :development, :test do
   gem 'rspec-rails', '~> 3.2.1' 
   gem 'factory_girl_rails', '~> 4.5.0'

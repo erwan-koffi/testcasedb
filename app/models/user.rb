@@ -7,7 +7,9 @@ class User < ActiveRecord::Base
     c.logged_in_timeout = TestDB::Application.config.session_timeout.minutes 
   end
   
-  scope :active, where(:active=> true)
+  scope :active, -> {
+    where(:active=> true)
+  }
   attr_accessible :username, :email, :password, :first_name, :last_name, :password_confirmation, :role, :active, :time_zone, :product_ids
   validates :username, :presence => true
   validates :username, :uniqueness => true

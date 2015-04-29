@@ -56,7 +56,8 @@ module TestDB
     # end
     # end
     
-    
+    config.active_record.raise_in_transactional_callbacks = true
+
     # Configuration options for Testlink
     # Set true to allow testlink import.
     # Always set back to false when finished!
