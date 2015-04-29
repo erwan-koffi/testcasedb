@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.21'
-gem 'mysql2', group: :mysql
+gem 'mysql2', '~> 0.3.18'
 gem 'pg', group: :postgres
 
 gem "unicorn", "~> 4.8.2"
