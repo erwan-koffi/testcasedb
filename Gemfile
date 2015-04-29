@@ -1,79 +1,79 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.21'
+gem 'rails', '~> 4.2.1'
 gem 'mysql2', '~> 0.3.18'
-gem 'pg', group: :postgres
+gem 'pg', '~> 0.18.1'
 
-gem "unicorn", "~> 4.8.2"
+gem 'unicorn', '~> 4.9.0'
 
-gem 'sidekiq'
+gem 'sidekiq', '~> 3.3.4'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'coffee-rails', '~> 4.1.0'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby
 
-  gem 'uglifier', '>= 1.0.3'
-  gem 'therubyracer', :platforms => :ruby
+  gem 'uglifier', '~> 2.7.1'
+  gem 'therubyracer', '~> 0.12.2'
 end
 
-gem 'best_in_place', '~> 3.0.1'
-gem 'jquery-fileupload-rails'
-gem 'sass-rails',   '~> 3.2.3'
-gem 'bootstrap-sass', '~> 2.3.2.1'
+gem 'best_in_place', '~> 3.0.3'
+gem 'jquery-fileupload-rails', '~> 0.4.5'
+gem 'sass-rails', '~> 5.0.3'
+gem 'bootstrap-sass', '~> 3.3.4.1'
 
-gem "jquery-rails"
-gem "jquery-ui-rails"
+gem 'jquery-rails', '~> 4.0.3'
+gem 'jquery-ui-rails', '~> 5.0.3'
 
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem 'less-rails', '~> 2.7.0' #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 
-gem 'rtf'
+gem 'rtf', '~> 0.3.3'
 
 # NO LONGER NEEDED in ruby 1.9
 # gem 'fastercsv'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem "nifty-generators", :group => :development
+gem 'nifty-generators', '~> 0.4.6'
 
 #require 'mysql2'
 
-gem "cocaine", "0.3.2"
-gem "nokogiri"
-gem "expectr", "~> 0.9.0"
-gem 'paperclip', "~> 2.7.2"
-gem "remotipart", "~> 1.0"
-gem 'mime-types'
+gem 'cocaine', '~> 0.5.7'
+gem 'nokogiri', '~> 1.6.6.2'
+gem 'expectr', '~> 2.0.2'
+gem 'paperclip', '~> 4.2.1'
+gem 'remotipart', '~> 1.2.1'
+gem 'mime-types', '~> 2.5'
 
 # Paperclip requires that ImageMagick is installed on the system
 
-gem 'chosen-rails'
+gem 'chosen-rails', '~> 1.4.1'
+gem 'spreadsheet', '~> 1.0.3'
 
-gem "spreadsheet"
+gem 'rake', '~> 10.4.2'
 
-gem "rake", '>=0.9.2'
+gem 'authlogic', '~> 3.4.5'
 
-gem 'authlogic'
-gem 'omniauth'
-gem 'omniauth-google-oauth2'
-gem 'cancan'
-gem 'redis-rails'
+gem 'omniauth', '~> 1.2.2'
+gem 'omniauth-google-oauth2', '~> 0.2.6'
+gem 'cancan', '~> 1.6.10'
+gem 'redis-rails', '~> 4.0.0'
 
-gem 'kaminari'
+gem 'kaminari', '~> 0.16.3'
 
-gem 'prawn'
+gem 'prawn', '~> 2.0.1'
 
-gem 'soap4r-ruby1.9'
+gem 'soap4r', '~> 1.5.8'
 
-gem 'simple_form'
-gem 'roo'
+gem 'simple_form', '~> 3.1.0'
+gem 'roo', '~> 2.0.0'
 # This gem is not directly used by the application
 # However, it is common to automate items using this
 # We simplify our clients' lives by including it in the package
-gem 'selenium-client'
+gem 'selenium-client', '~> 1.2.18'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -100,9 +100,9 @@ gem 'selenium-client'
 # gem "mocha", :group => :test
 gem 'blitz'
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0'
-  gem "factory_girl_rails"
-  gem "capybara", '>= 2.2.0'
-  gem 'database_cleaner'
-  gem 'thin'
+  gem 'rspec-rails', '~> 3.2.1' 
+  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'capybara', '~> 2.4.4'
+  gem 'database_cleaner', '~> 1.4.1'
+  gem 'thin', '~> 1.6.3'
 end
