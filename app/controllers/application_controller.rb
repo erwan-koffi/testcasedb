@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  add_flash_types :success, :info, :warning, :danger
 
   # When Product authorization is checked, the error below is generated on a failure
   # This redirects the user to the home page with an auth error

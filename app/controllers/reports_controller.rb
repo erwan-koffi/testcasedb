@@ -111,7 +111,7 @@ class ReportsController < ApplicationController
     
     if @report.user_id == current_user.id
       @report.destroy
-      redirect_to reports_url, :flash => { :notice => "Report has been deleted." }
+      redirect_to reports_url, :flash => { :success => "Report has been deleted." }
     else
       redirect_to reports_url, :flash => { :warning => "You do not have access to this report." }
     end

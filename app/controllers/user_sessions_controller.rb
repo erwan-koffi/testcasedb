@@ -15,9 +15,9 @@ class UserSessionsController < ApplicationController
         
     if @user_session.save
       if params[:user_session][:referer]
-        redirect_to params[:user_session][:referer], :notice => "Successfully logged in."
+        redirect_to params[:user_session][:referer], :success => "Successfully logged in."
       else  
-        redirect_to home_path, :notice => "Successfully logged in."
+        redirect_to home_path, :success => "Successfully logged in."
       end
     else
       render :action => 'new', :layout => false, :test => 'Invalid username or password'
@@ -31,6 +31,6 @@ class UserSessionsController < ApplicationController
     
     # Prepare new session
     @user_session = UserSession.new
-    render :action => 'new', :layout => false, :notice => "Logged out."
+    render :action => 'new', :layout => false, :success => "Logged out."
   end
 end

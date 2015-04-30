@@ -204,7 +204,7 @@ class AssignmentsController < ApplicationController
           UserMailer.task_assigned(@assignment.task, @url).deliver
           
           logger.debug "Assignment created. Id is #{@assignment.id}"
-          format.html { redirect_to(@assignment, :notice => 'Assignment was successfully created.') }
+          format.html { redirect_to(@assignment, :success => 'Assignment was successfully created.') }
         rescue
           logger.debug "Assignment created. Id is #{@assignment.id}"
           format.html { redirect_to(@assignment, :warning => 'Assignment was successfully created, but email was not sent.') }
@@ -240,7 +240,7 @@ class AssignmentsController < ApplicationController
         # Create item in log history
         # Action type based on value from en.yaml
         History.create(:assignment_id => @assignment.id, :action => 2, :user_id => current_user.id)
-        format.html { redirect_to(@assignment, :notice => 'Assignment was successfully updated.') }
+        format.html { redirect_to(@assignment, :success => 'Assignment was successfully updated.') }
       else
         # Are these the four items we need for failed create
         @users_select = User.find(:all, :order => "last_name").collect {|u| [ u.first_name + ' ' + u.last_name, u.id ]}

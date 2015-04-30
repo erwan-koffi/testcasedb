@@ -74,10 +74,10 @@ class VersionsController < ApplicationController
       if @version.save
         # If it is save and new
         if params[:commit] == "Save and Create Additional"
-          format.html { redirect_to( new_version_path, :notice => 'Version was successfully created. Please create another.') }
+          format.html { redirect_to( new_version_path, :success => 'Version was successfully created. Please create another.') }
          # If it is just save, show the new user
         else
-          format.html { redirect_to(@version, :notice => 'Version was successfully created.') }
+          format.html { redirect_to(@version, :success => 'Version was successfully created.') }
         end
       # If the save fails
       else
@@ -100,7 +100,7 @@ class VersionsController < ApplicationController
     
     respond_to do |format|
       if @version.update_attributes(params[:version])
-        format.html { redirect_to(@version, :notice => 'Version was successfully updated.') }
+        format.html { redirect_to(@version, :success => 'Version was successfully updated.') }
       else
         @products_select = Product.find(:all).collect {|p| [ p.name, p.id ]}
         format.html { render :action => "edit" }

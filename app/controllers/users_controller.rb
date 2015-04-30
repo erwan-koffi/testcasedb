@@ -25,10 +25,10 @@ class UsersController < ApplicationController
     if @user.save
       # If this is save and new, redirect to new user page
       if params[:commit] == "Save and Create Additional"
-        redirect_to new_user_path, :notice => 'User successfully created. Please create another.'
+        redirect_to new_user_path, :success => 'User successfully created. Please create another.'
         # If it is just save, show the new user
       else
-        redirect_to users_path, :notice => "Successfully created user." 
+        redirect_to users_path, :success => "Successfully created user." 
       end
     else
       render :action => 'new'
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
     # otherwise allow changes. so proceed per normal
     else  
       if @user.update_attributes(params[:user])
-        redirect_to users_path, :notice  => "Successfully updated user."
+        redirect_to users_path, :success  => "Successfully updated user."
       else
         render :action => 'edit', :flash => {:warning => "There was an issue updating the user."}
       end
@@ -96,7 +96,7 @@ class UsersController < ApplicationController
     else
       # If this is a valid request, try to update the attributes as per normal
       if @user.update_attributes(params[:user])
-        redirect_to home_path, :notice => 'Changes successfully saved.'
+        redirect_to home_path, :success => 'Changes successfully saved.'
       else
         render :action => 'my_settings', :flash => {:warning => "There was an issue updating your settings."}
       end
@@ -110,7 +110,7 @@ class UsersController < ApplicationController
     @user.failed_login_count = 0
     @user.save
     
-    redirect_to users_path, :notice => 'User account unlocked'
+    redirect_to users_path, :success => 'User account unlocked'
   end
   
   private
