@@ -159,7 +159,7 @@
                 </div>
             </nav>
 
-            <div class="">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-8 col-md-offset-8 col-sm-offset-8">
                         Welcome <%= current_user.first_name + ' ' + current_user.last_name%> |
@@ -185,10 +185,10 @@
 
         <div id="footer">
             <div class="container">
-                <p class="muted credit">
+                <p class="text-muted credit">
                     Need assistance. Download the <%= link_to "Admin Guide", "assets/admin_guide.pdf" %> or  <%= link_to "Quick Start Guide", "assets/quick_start_guide.pdf" %>
                 </p>
-                <p class="muted credit">
+                <p class="text-muted credit">
                     <a href="http://www.testcasedb.com" target="_blank">TestCaseDB</a>. Copyright &copy; 2012 - 2013 <a href="http://www.msjit.ca" target="_blank">MSJ IT Services Inc</a>.
                     Forked by Erwan KOFFI.
                 </p>
