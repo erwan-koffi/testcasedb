@@ -1,17 +1,17 @@
 <h1>Test Cases</h1>
 
-<%= form_tag test_case_search_path, :method => 'get', :class => "form-search" do %>
+<%= form_tag test_case_search_path, :method => 'get', :class => "form-inline" do %>
     <%= text_field_tag :search, params[:search], :placeholder => "Search", :class=>"search_text" %>
     <button type="submit" class="btn btn-primary">
-      <i class="icon-search icon-white"></i> Search
+      <span class="glyphicon glyphicon-search"></span> Search
     </button>
 <% end %>
 
 
 <legend>Test Case Tree View</legend>
 <div class="addLink">
-  <input type="submit" name="treenode_selectall" value="Select All Visible", class="btn btn-small btn-inverse" />
-  <input type="submit" name="treenode_deselectall" value="Deselect All Visible", class="btn btn-small btn-inverse" />
+  <input type="submit" name="treenode_selectall" value="Select All Visible", class="btn btn-sm btn-default" />
+  <input type="submit" name="treenode_deselectall" value="Deselect All Visible", class="btn btn-sm btn-default" />
 </div>
 <%= form_tag( {:action => "index", :format => :csv }, :method => 'GET') do %>
   <div id="treeView">
@@ -20,7 +20,7 @@
         <div class="treeParent" id='treeParent<%= product.id %>'>
    
           <ul>
-      		  <li><i class="icon-chevron-right"></i> <%= link_to product.name, list_test_case_categories_path(product.id), :remote => true, :class => 'treeLink' %>
+      		  <li><span class="glyphicon glyphicon-chevron-right"></span> <%= link_to product.name, list_test_case_categories_path(product.id), :remote => true, :class => 'treeLink' %>
           </ul>
         </div>
       <% end %>
@@ -30,8 +30,8 @@
   </div>
   
   <div class="addLink">
-    <input type="submit" name="treenode_selectall" value="Select All Visible", class="btn btn-small btn-inverse" />
-    <input type="submit" name="treenode_deselectall" value="Deselect All Visible", class="btn btn-small btn-inverse" />
+    <input type="submit" name="treenode_selectall" value="Select All Visible", class="btn btn-sm btn-default" />
+    <input type="submit" name="treenode_deselectall" value="Deselect All Visible", class="btn btn-sm btn-default" />
   </div>
   <div class="addLink">
     <% if can? :create, @test_case %>
